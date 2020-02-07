@@ -45,7 +45,7 @@ class App extends Component {
 
   //Add todo
 
-  AddTodo = (title) => {
+  addTodo = (title) => {
     console.log(title)
   }
 
@@ -56,7 +56,7 @@ class App extends Component {
       <div className="App">
         <div className="container">
           <Header/>
-          <AddTodo AddTodo={this.AddTodo}/>
+          <AddTodo addTodo={this.addTodo}/>
           <Todos todos={this.state.todos} markComplete={this.markComplete} delTodo={this.delTodo}/>
         </div>
       </div>

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, desktopCapturer } = require("electron");
+const { app, BrowserWindow } = require("electron");
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -10,16 +10,29 @@ function createWindow() {
     }
   });
 
+  let winRenderer = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
+
   /*   win.loadFile('index.html')
    */
+
   win.loadURL("http://localhost:3000/");
+  winRenderer.loadFile(__dirname + "/index.html");
+
   win.webContents.openDevTools();
+  winRenderer.webContents.openDevTools();
 }
 
 app.on("ready", createWindow);
 
 app.on("closed", () => {
   win = null;
+  winRenderer = null;
   app.exit(0);
 });
 
@@ -37,7 +50,7 @@ ipc.on("aSynMessage", (event, args) => {
 });
 
 //DESKTOPCapturer
-var fs = require("fs");
+/* var fs = require("fs");
 var recorder;
 var blobs = [];
 
@@ -100,7 +113,9 @@ function toBuffer(ab) {
 startRecording.bind(this)();
 setTimeout(function() {
   stopRecording();
-}, 7000);
+}, 7000); */
+
+//DesktopCapturer v2
 
 /* function capturer() {
   let capture = desktopCapturer

@@ -1,0 +1,51 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+.MyApp {
+  width: 40%;
+  margin: 2% 30% 15%;
+  padding: 4%;
+  border: 0.5px solid #a3a2a2;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-color: white;
+}
+
+.record p:first-child {
+  color: #1e3e5b;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.start {
+  height: 45px;
+  width: 40%;
+  color: white;
+  background-color: #363cf5;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 7% 0 0 0;
+}
+
+.stop {
+  height: 45px;
+  width: 40%;
+  color: white;
+  background-color: #c74141;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 7% 0 0 0;
+}
+
+.message {
+  color: #c74141;
+  font-size: 15px;
+  margin: 5% 0 0 0;
+  font-weight: bold;
+}

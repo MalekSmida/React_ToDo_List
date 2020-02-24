@@ -2,6 +2,10 @@ console.log("Renderer is here!");
 
 const { desktopCapturer } = require("electron");
 
+let blobs = [];
+let fs = require("fs");
+let video;
+
 desktopCapturer
   .getSources({ types: ["window", "screen"] })
   .then(async sources => {
@@ -35,14 +39,59 @@ desktopCapturer
   });
 
 function handleStream(stream) {
-  const video = document.querySelector(".video");
+  video = document.querySelector(".video");
   video.srcObject = stream;
-  video.onloadedmetadata = e => video.play();
+
+  video.ondataavailable = function(event) {
+    blobs.push(event.data);
+  };
+
+  /* video.onloadedmetadata = e =>  */ video.play();
 }
 
 function handleError(e) {
   console.log(e);
 }
+
+function stopRecording() {
+  video.pause();
+  console.log("Video => ", video);
+  console.log("recorder stopped, data available");
+  toArrayBuffer(new Blob(blobs, { type: "video/webm" }), function(ab) {
+    var buffer = toBuffer(ab);
+    var file = `./videos/example.webm`;
+    fs.writeFile(file, buffer, function(err) {
+      if (err) {
+        console.error("Failed to save video " + err);
+      } else {
+        console.log("Saved video: " + file);
+      }
+    });
+  });
+}
+
+function toArrayBuffer(blob, cb) {
+  let fileReader = new FileReader();
+  fileReader.onload = function() {
+    let arrayBuffer = this.result;
+    cb(arrayBuffer);
+  };
+  fileReader.readAsArrayBuffer(blob);
+}
+
+function toBuffer(ab) {
+  let buffer = new Buffer(ab.byteLength); //Buffer handling streams of binary data
+  let arr = new Uint8Array(ab);
+  for (let i = 0; i < arr.byteLength; i++) {
+    buffer[i] = arr[i];
+  }
+  return buffer;
+}
+
+// Record for 7 seconds and save to disk
+setTimeout(function() {
+  stopRecording();
+}, 7000);
 
 ///////////////////////////////////////////////////////////
 

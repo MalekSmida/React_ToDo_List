@@ -2,17 +2,91 @@ console.log("Renderer is here!");
 
 const { desktopCapturer } = require("electron");
 
-var fs = require("fs");
-var recorder;
-var blobs = [];
+desktopCapturer
+  .getSources({ types: ["window", "screen"] })
+  .then(async sources => {
+    for (const source of sources) {
+      if (true /* source.name === "Electron" */) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: {
+              mandatory: {
+                chromeMediaSource: "desktop",
+                chromeMediaSourceId: source.id,
+                /* minWidth: 1280,
+                maxWidth: 1280,
+                minHeight: 720,
+                maxHeight: 720 */
+                minWidth: 456,
+                maxWidth: 456,
+                minHeight: 305,
+                maxHeight: 305
+              }
+            }
+          });
+          handleStream(stream);
+        } catch (e) {
+          handleError(e);
+        }
+        return;
+      }
+    }
+  });
 
-console.log("test 1 :: ", desktopCapturer);
+function handleStream(stream) {
+  const video = document.querySelector(".video");
+  video.srcObject = stream;
+  video.onloadedmetadata = e => video.play();
+}
 
+function handleError(e) {
+  console.log(e);
+}
+
+///////////////////////////////////////////////////////////
+
+/* const { desktopCapturer } = require("electron");
+
+let SECRET_KEY = "Magnemite";
+let recorder;
+let blobs = [];
 
 function startRecording() {
-  var title = "First of the North";
-  console.log(desktopCapturer);
-  
+  var title = document.title;
+  document.title = SECRET_KEY;
+
+  desktopCapturer.getSources({ types: ["window", "screen"] }, function(
+    error,
+    sources
+  ) {
+    if (error) throw error;
+    for (let i = 0; i < sources.length; i++) {
+      let src = sources[i];
+      if (src.name === SECRET_KEY) {
+        document.title = title;
+
+        navigator.webkitGetUserMedia(
+          {
+            audio: false,
+            video: {
+              mandatory: {
+                chromeMediaSource: "desktop",
+                chromeMediaSourceId: src.id,
+                minWidth: 800,
+                maxWidth: 1280,
+                minHeight: 600,
+                maxHeight: 720
+              }
+            }
+          },
+          handleStream,
+          handleUserMediaError
+        );
+        return;
+      }
+    }
+  });
 }
 
 function handleStream(stream) {
@@ -26,6 +100,7 @@ function handleStream(stream) {
 
 function stopRecording() {
   recorder.stop();
+  console.log("recorder stopped, data available");
   toArrayBuffer(new Blob(blobs, { type: "video/webm" }), function(ab) {
     var buffer = toBuffer(ab);
     var file = `./videos/example.webm`;
@@ -62,7 +137,8 @@ function toBuffer(ab) {
 }
 
 // Record for 7 seconds and save to disk
-startRecording.bind(this)();
+startRecording();
 setTimeout(function() {
   stopRecording();
 }, 7000);
+ */

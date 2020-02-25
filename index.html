@@ -17,7 +17,18 @@
     <h1 style="color: white;">
       hello from render proc electron
     </h1>
-    <video class="video"></video>
+
+    <div>
+      <button id="start">Open Streaming</button>
+      <button id="record">Start Recording</button>
+      <button id="play" disabled>Play</button>
+      <button id="download" disabled>Download</button>
+    </div>
+
+    <!-- <video class="video"></video> -->
+    <video id="streaming"></video>
+    <video id="recorded" playsinline loop></video>
+
     <script>
       require("./index.js"); //importScript localfile
     </script>
